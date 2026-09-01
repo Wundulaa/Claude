@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+
+# Spielstand und Statistik gehoeren dem Spieler, nicht dem Repository
+galaxy_attack_save.json
+galaxy_attack_stats.db
