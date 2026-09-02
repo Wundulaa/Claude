@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>(function(){try{var t=localStorage.getItem('shard-calc-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 <title>Spawner-Shard-Rechner</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
@@ -53,9 +54,10 @@ h1,h2{font-family:"Chakra Petch","IBM Plex Sans",sans-serif; text-wrap:balance; 
 .eyebrow::before{content:""; width:8px; height:8px; background:var(--accent); flex:none}
 h1{font-size:clamp(24px,4.4vw,34px); font-weight:700; letter-spacing:-.015em; margin:0 0 6px}
 .lede{max-width:48ch; color:var(--ink-2); font-size:15px; margin:0}
+.headerbtns{display:flex; gap:8px; flex:none; margin-top:2px}
 .iconbtn{flex:none; width:40px; height:40px; border:1px solid var(--line); background:var(--surface);
   color:var(--ink-2); font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center;
-  border-radius:0; margin-top:2px}
+  border-radius:0}
 .iconbtn:hover{color:var(--accent); border-color:var(--accent)}
 .iconbtn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
 
@@ -146,7 +148,10 @@ td .sub{color:var(--muted); font-size:11.5px; margin-top:3px; display:block; fon
       <h1>Spawner-Shard-Rechner</h1>
       <p class="lede">Preis eingeben, Stundenlohn sehen — und nachschlagen, was für jede Shard-Größe noch ein fairer Preis ist.</p>
     </div>
-    <button class="iconbtn" id="btn-settings" type="button" aria-label="Einstellungen öffnen">⚙</button>
+    <div class="headerbtns">
+      <button class="iconbtn" id="btn-theme" type="button" aria-label="Dunkles Design aktivieren" aria-pressed="false">☾</button>
+      <button class="iconbtn" id="btn-settings" type="button" aria-label="Einstellungen öffnen">⚙</button>
+    </div>
   </div>
 </header>
 
@@ -430,6 +435,35 @@ $('backdrop').addEventListener('click',closeDrawer);
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape' && !$('drawer').hidden) closeDrawer();
 });
+
+/* ---- theme toggle ---- */
+var THEME_KEY='shard-calc-theme';
+function systemPrefersDark(){
+  return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+}
+function currentTheme(){
+  var attr=document.documentElement.getAttribute('data-theme');
+  return (attr==='light'||attr==='dark') ? attr : (systemPrefersDark()?'dark':'light');
+}
+function applyThemeIcon(){
+  var dark=currentTheme()==='dark';
+  var btn=$('btn-theme');
+  btn.textContent=dark?'☀':'☾';
+  btn.setAttribute('aria-label', dark?'Helles Design aktivieren':'Dunkles Design aktivieren');
+  btn.setAttribute('aria-pressed', String(dark));
+}
+$('btn-theme').addEventListener('click',function(){
+  var next=currentTheme()==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme',next);
+  try{ localStorage.setItem(THEME_KEY,next); }catch(e){}
+  applyThemeIcon();
+});
+if(window.matchMedia){
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(){
+    if(!document.documentElement.getAttribute('data-theme')) applyThemeIcon();
+  });
+}
+applyThemeIcon();
 
 render();
 })();
