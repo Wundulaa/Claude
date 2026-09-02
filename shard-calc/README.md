@@ -7,15 +7,17 @@ und nachschlagen, was für jede Shard-Größe noch ein fairer Preis ist.
 
 ## Werkzeuge
 
-**Preis-Check.** Shard-Größe wählen, Gesamtpreis oder Preis je Ladung
-eintippen — beide Felder sind gekoppelt. Ergebnis: erreichter Stundenlohn ohne
-und mit Boost, der bessere Modus ist markiert, dazu Gewinn und Farmzeit je
-Shard. Die Zahl färbt sich nach Zielwert: Grün ab Ziel-Stundenlohn, Gelb ab
-Mindest-Stundenlohn, Rot darunter.
+**Preis-Check.** Shard-Größe wählen (30, 40, 60, 100, 120, 150, 200, 300, 330,
+360, 380, 390, 405 Ladungen, oder über „eigene Anzahl" eine beliebige Menge
+eintippen), Gesamtpreis oder Preis je Ladung eintippen — beide Felder sind
+gekoppelt. Ergebnis: erreichter Stundenlohn ohne und mit Boost, der bessere
+Modus ist markiert, dazu Gewinn und Farmzeit je Shard. Die Zahl färbt sich
+nach Zielwert: Grün ab Ziel-Stundenlohn, Gelb ab Mindest-Stundenlohn, Rot
+darunter.
 
-**Faire Preise je Shard-Größe.** Feste Tabelle für alle Shard-Größen
-(30 … 405 Ladungen): Vollwert und der faire Preis-Rahmen — unten der Preis
-bei Ziel-Stundenlohn, oben bei Mindest-Stundenlohn, automatisch im besseren
+**Faire Preise je Shard-Größe.** Feste Tabelle für alle 13 Shard-Größen im
+Verkauf: Vollwert und der faire Preis-Rahmen — unten der Preis bei
+Ziel-Stundenlohn, oben bei Mindest-Stundenlohn, automatisch im besseren
 Modus. Zeile anklicken wählt die Größe auch im Preis-Check.
 
 **Einstellungen** (Zahnrad oben rechts). Alle Grundwerte, normalerweise fix:

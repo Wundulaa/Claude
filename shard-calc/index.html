@@ -72,8 +72,10 @@ section{margin-bottom:40px}
 .chip{font-family:"IBM Plex Mono",monospace; font-size:13px; font-variant-numeric:tabular-nums;
   padding:7px 12px; border:1px solid var(--line); background:var(--surface); color:var(--ink-2); cursor:pointer;}
 .chip:hover{border-color:var(--accent); color:var(--accent)}
-.chip[aria-pressed=true]{background:var(--ink); color:var(--bg); border-color:var(--ink)}
+.chip[aria-pressed=true]{background:var(--ink); color:var(--bg); border-color:var(--ink); border-style:solid}
 .chip:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.chip-custom{border-style:dashed}
+.custom-n{max-width:240px; margin-top:12px}
 
 /* ---- price inputs ---- */
 .pricebar{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:16px 0 20px}
@@ -163,6 +165,10 @@ td .sub{color:var(--muted); font-size:11.5px; margin-top:3px; display:block; fon
     <p class="hint">Shard-Größe wählen, Preis eintragen — beide Felder sind gekoppelt.</p>
   </div>
   <div class="chips" id="shard-chips"></div>
+  <div class="field custom-n" id="custom-field" hidden>
+    <label for="f-customn">Eigene Anzahl Ladungen</label>
+    <input type="text" inputmode="numeric" id="f-customn" value="75">
+  </div>
   <div class="pricebar">
     <div class="field"><label for="f-total">Preis fürs ganze Shard</label><input type="text" inputmode="decimal" id="f-total" value="12.000"></div>
     <div class="field"><label for="f-ppc">Preis je Ladung</label><input type="text" inputmode="decimal" id="f-ppc" value="60"></div>
@@ -245,7 +251,7 @@ td .sub{color:var(--muted); font-size:11.5px; margin-top:3px; display:block; fon
 <script>
 (function(){
 "use strict";
-var SHARDS=[30,40,60,100,150,200,300,330,360,380,390,405];
+var SHARDS=[30,40,60,100,120,150,200,300,330,360,380,390,405];
 var DEFAULTS={'f-cpc':'91,44','f-per':'5','f-tn':'10','f-tb':'3','f-bcost':'4.000','f-bmin':'10','f-over':'0','f-target':'100.000','f-min':'40.000'};
 var selShard=200, ppc=60;
 
@@ -370,17 +376,37 @@ function render(skip){
 /* ---- shard chips ---- */
 $('shard-chips').innerHTML=SHARDS.map(function(n){
   return '<button type="button" class="chip" data-n="'+n+'" aria-pressed="'+(n===selShard)+'">'+n+'</button>';
-}).join('');
+}).join('') + '<button type="button" class="chip chip-custom" data-n="custom" aria-pressed="false">eigene Anzahl</button>';
+
+function markChips(activeData){
+  Array.prototype.forEach.call($('shard-chips').children,function(el){
+    el.setAttribute('aria-pressed', String(el.dataset.n===String(activeData)));
+  });
+}
 function selectShard(n){
   selShard=n;
-  Array.prototype.forEach.call($('shard-chips').children,function(el){
-    el.setAttribute('aria-pressed', String(Number(el.dataset.n)===n));
-  });
+  markChips(n);
+  $('custom-field').hidden=true;
   render();
+}
+function activateCustom(){
+  markChips('custom');
+  $('custom-field').hidden=false;
+  var v=parseNum($('f-customn').value);
+  if(isFinite(v)&&v>0) selShard=Math.round(v);
+  render();
+  $('f-customn').focus();
+  $('f-customn').select();
 }
 $('shard-chips').addEventListener('click',function(e){
   var b=e.target.closest('.chip'); if(!b) return;
+  if(b.dataset.n==='custom'){ activateCustom(); return; }
   selectShard(Number(b.dataset.n));
+});
+$('f-customn').addEventListener('input',function(){
+  var v=parseNum(this.value);
+  if(isFinite(v)&&v>0) selShard=Math.round(v);
+  render();
 });
 $('tbl-rows').addEventListener('click',function(e){
   var tr=e.target.closest('tr[data-n]'); if(!tr) return;
@@ -411,10 +437,10 @@ $('f-ppc').addEventListener('input',function(){
 $('f-billing').addEventListener('change',function(){render();});
 $('btn-reset').addEventListener('click',function(){
   Object.keys(DEFAULTS).forEach(function(id){$(id).value=DEFAULTS[id];});
+  $('f-customn').value='75';
   selShard=200; ppc=60;
-  Array.prototype.forEach.call($('shard-chips').children,function(el){
-    el.setAttribute('aria-pressed',String(Number(el.dataset.n)===200));
-  });
+  markChips(200);
+  $('custom-field').hidden=true;
   render();
 });
 
